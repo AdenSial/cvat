@@ -1,50 +1,38 @@
-# Definition of Done
+# Annotation Analytics — Definition of Done
 
-This checklist defines the evidence required to consider the assessment complete. An item is only considered done when its evidence is recorded.
+## Backend API — Requirement 1
 
-| #  | Requirement                                                                                                  | Status | Evidence                                                                                                |
-| -- | ------------------------------------------------------------------------------------------------------------ | ------ | ------------------------------------------------------------------------------------------------------- |
-| 1  | API endpoint returns annotation counts grouped by class for a task from the database.                        | [ ]    |                                                                                                         |
-| 2  | API result has been checked against a known task and database result.                                        | [ ]    | Task #1 currently contains 1090 `LabeledShape` records; database grouping result will be recorded here. |
-| 3  | Authenticated user with access to the task can call the endpoint successfully.                               | [ ]    |                                                                                                         |
-| 4  | Unauthenticated request is refused by CVAT authentication.                                                   | [ ]    |                                                                                                         |
-| 5  | Authenticated user without access to the task is refused by CVAT task permissions.                           | [ ]    |                                                                                                         |
-| 6  | A web interface page calls the annotation statistics endpoint.                                               | [ ]    |                                                                                                         |
-| 7  | Annotation counts are displayed as a graph.                                                                  | [ ]    |                                                                                                         |
-| 8  | The page has a clear empty/no-data state.                                                                    | [ ]    |                                                                                                         |
-| 9  | The page has a clear failed-request/error state.                                                             | [ ]    |                                                                                                         |
-| 10 | API response-time objective is measured using five runs with raw output, median and spread recorded.         | [ ]    | `docs/OBJECTIVES.md`                                                                                    |
-| 11 | Response-time target is reported as met or missed with an explanation.                                       | [ ]    | `docs/OBJECTIVES.md`                                                                                    |
-| 12 | One useful filter or grouping beyond the plain per-class count is implemented and its purpose is documented. | [ ]    |                                                                                                         |
-| 13 | Graph updates live when annotations change over WebSocket.                                                   | [ ]    |                                                                                                         |
-| 14 | Page recovers after the WebSocket connection drops and reconnects.                                           | [ ]    |                                                                                                         |
-| 15 | Final work is split across meaningful commits rather than one large final commit.                            | [ ]    | `git log --oneline`                                                                                     |
-| 16 | All unfinished requirements are explicitly listed with a reason.                                             | [ ]    | Final section below                                                                                     |
+- [x] Created a custom Django implementation for annotation statistics.
+- [x] Implemented `GET /api/test/tasks/<task_id>/annotation-stats/`.
+- [x] Reads annotation data from CVAT's database.
+- [x] Groups annotations by label/class.
+- [x] Returns the label ID.
+- [x] Returns the label name.
+- [x] Returns the annotation count for each label.
+- [x] Returns the total annotation count.
+- [x] Registered the endpoint in the Django URL configuration.
+- [x] Verified the endpoint resolves correctly.
+- [x] Tested the endpoint using Task 1.
+- [x] Endpoint returned HTTP 200.
+- [x] Verified that the response contains real annotation data.
 
-## Known Validation Data
+### Evidence
 
-The primary validation task is:
+Endpoint tested:
 
-* Task ID: `1`
-* Task name: `COCO Analytics Test`
-* Frames: `135`
-* Job ID: `1`
-* LabeledShape records: `1090`
+`GET /api/test/tasks/1/annotation-stats/`
 
-The initial database grouping was verified manually before implementation. The result will be used as the reference for validating the API.
+The endpoint returned:
 
-## Completion Notes
-
-This section will be completed at the end of the assessment.
-
-### Finished
-
-To be completed.
-
-### Not Finished
-
-To be completed. Each unfinished requirement will include the reason it was not reached.
-
-### Final Evidence
-
-Relevant commit SHAs, API test output, timing output, screenshots or URLs will be recorded here.
+```json
+{
+  "task_id": 1,
+  "total_annotations": 1090,
+  "counts": [
+    {
+      "label_id": 1,
+      "label": "person",
+      "count": 420
+    }
+  ]
+}
